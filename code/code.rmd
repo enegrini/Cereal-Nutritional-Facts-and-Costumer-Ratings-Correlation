@@ -1,0 +1,150 @@
+---
+title: "Cereal Nutritional Facts"
+author: "Elisa and Adriana"
+date: "5/29/2019"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+![](https://zdnet2.cbsistatic.com/hub/i/r/2016/02/18/b62c3b19-af75-4451-9e4f-18a21e1c542f/crop/770x483+0+59/resize/770xauto/bd7b7a0916927067f903d0f895a847c1/cereal.jpg)
+^[Watson, J.A. “Linux and Breakfast Cereal: Why Are There so Many Flavours?” ZDNet, ZDNet, 21 Feb. 2016, www.zdnet.com/article/linux-and-breakfast-cereal-why-are-there-so-many-flavours/.
+]
+
+## **Introduction:** 
+Sometimes eating a perfectly balanced breakfast in the morning is hard and thus we usually turn to eating cereal. Believe it or not, healthy cereal does exist. In fact, it was invented as a low-fat health product to deliver more fiber to our bodies. The trouble comes when trying to distinguish those cereals that are good for you from those that just pretend to be. Misleading labels and advertising don't help, but looking at the nutritional facts does. 
+
+We will look at the nutritional facts and rating of 76 breakfast cereals to understand some relationships. For example, is the amount of calories dependent on sugar, fiber, or carbohydrates? Or perhaps all of the above? 
+
+According to studies^[“Breakfast Cereals: Healthy or Unhealthy?” Healthline, Healthline Media, www.healthline.com/nutrition/are-breakfast-cereals-healthy.] sugar, fiber, and whole grains are what people look at the most when choosing a breakfast cereal. It makes sense that when being rated we will look at these ingredients since we're trying to be healthy. We will look at the rating and compare with the sugar and the fiber to see if this is true. 
+
+
+## **The Data:**
+For this project we used the Kaggle cereal data set ^[Crawford, Chris. “80 Cereals.” Kaggle, 24 Oct. 2017, www.kaggle.com/crawford/80-cereals.]. This data set contains cereal name, manufacturer name, rating and nutritional facts such as sugar per serving, carbohidrates per serving, etc.
+
+
+## **The Analysis:**
+
+```{r setup, cache =TRUE, include = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(mosaic)
+library(dplyr)
+library(broom)
+```
+
+
+```{r, cache=TRUE, include = FALSE}
+setwd("/cloud/project/project /data")
+cereal <- read.csv(file="cereal.csv", header=TRUE, sep=",")
+```
+
+
+```{r, include = FALSE}
+# Change column names
+cereal <- cereal
+colnames(cereal) <- c("Name", "Manufacturer", "Type", "Calories", "Protein", "Fat", "Sodium", "Fibre", "Carbohydrates", "Sugar", "Potassium", "Vitamins", "Shelf", "Weight", "Cups", "Rating")
+```
+
+```{r, include=FALSE}
+# Create feature with full manufacturer name
+cereal$Manufacturer_Name <- cereal$Manufacturer
+cereal$Manufacturer_Name <- gsub(pattern = "P", replacement = "Post", x = cereal$Manufacturer_Name)
+cereal$Manufacturer_Name <- gsub(pattern = "A", replacement = "American H. F. P.", x = cereal$Manufacturer_Name)
+cereal$Manufacturer_Name <- gsub(pattern = "G", replacement = "General Mills", x = cereal$Manufacturer_Name)
+cereal$Manufacturer_Name <- gsub(pattern = "K", replacement = "Kellogs", x = cereal$Manufacturer_Name)
+cereal$Manufacturer_Name <- gsub(pattern = "N", replacement = "Nabisco", x = cereal$Manufacturer_Name)
+cereal$Manufacturer_Name <- gsub(pattern = "Q", replacement = "Quaker Oats", x = cereal$Manufacturer_Name)
+cereal$Manufacturer_Name <- gsub(pattern = "R", replacement = "Ralston Purina", x = cereal$Manufacturer_Name)
+```
+
+We first looked at which manifacturers obtained the best rating for their cereals.
+
+```{r, echo = FALSE}
+cereal2<- cereal%>%
+  select(Manufacturer_Name, Rating)%>%
+   arrange(Manufacturer_Name)
+  
+ggplot(data = cereal2) + geom_boxplot (aes(x = Manufacturer_Name, y = Rating, color=Manufacturer_Name))+
+theme(axis.text.x=element_text(angle=45, hjust=1, vjust=1))+ labs(x='')+ labs(y= 'Rating')
+```
+
+We can see that Nabisco obtained the highest ratings and that all the ratings for this manufacturer cereals were very high. We also note that in the Kellogs rating data there is am outliar very high rating for the cereal "All-Bran with Extra Fiber" which obtained a 93.7 rating.
+
+We also plotted a scatter plot which shows how many cereals were rated from each manufacturer.
+
+```{r, echo = FALSE}
+ ggplot(data = cereal2) +
+  geom_point(aes(x = Manufacturer_Name, y = Rating, color=Manufacturer_Name)) + 
+  xlab("") + ylab("Rating") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  ggtitle("Manufacturers Ratings") +
+  scale_shape_discrete(name = "Payer")
+#+ geom_boxplot(aes(x = Manufacturer_Name, y = Rating, color=Manufacturer_Name))
+```
+
+We note that for the manufacturer " American Home Food Production" we only have one rating so this data is not really representative of the overall rating of this manufacturer.
+
+We then explored the relation between Sugar per serving and Calories per serving using a linear regression model.
+
+```{r, echo = FALSE}
+mod1 <- lm(Calories~Sugar,data=cereal)
+summary(mod1)
+mod1%>%
+augment(data = cereal) %>%
+  ggplot(mapping = aes(x = Sugar, y = .fitted)) +
+    geom_point(mapping = aes(y = Calories,  color= Manufacturer_Name), alpha = 0.5) +
+    geom_line(color = "purple") + xlab("Sugar") + ylab("Calories") 
+```
+As expected the Calories increase as the amount of sugar increases. The colors show the differen cereal grouped by their manufacturer. We not that the cereals with the highest content in sugar are produced by Kellogs (Smags) and Post (Golden Crisp). We also note that the R suqred for this model is 0.31 so only 31% of the variance in the data is explained by this model. This suggests we might need to add more independent variables to obtain a reliable model to predict Calories.
+
+With this aim in mind we performed a linear regression with Calories v.s. all the other nutritional facts and explored, via the p-values, which ones are the best ones in order to predict Calories per serving.
+
+```{r, echo = FALSE}
+all_var1 <- lm(formula= Calories~ Sugar+ Sodium + Fibre+ Carbohydrates+ Fat+ Protein + Vitamins, data= cereal)
+summary(all_var1)
+```
+
+We see that all the nutritional facts but Sodium and Vitamins are significant in prediction Calories per serving and that the most significant predictors are Sugar and Carbohydrates. We note that for this model the percentage of variance explained is 83%; however we might be able to simplify the model by getting rid of the varibales that are not significant.
+To do this we perform a linear regression eliminating the non-significant predictors Sodium and Vitamins and, since Carbohydrates seem to be one of the most significant we explored if the dependence of Calories on Carbohydrates was suqared.
+
+```{r, echo = FALSE}
+all_var2 <- lm(formula= Calories~ Sugar + Fibre+ I(Carbohydrates^2)+ Fat+ Protein, data= cereal)
+summary(all_var2)
+```
+
+ The results show that using as predictor Carbohydrates suqred increases the predictive power of the model giving a percentage of variance explained of 88%.
+ 
+Finally, we tried to predict the predict the Rating from the Sugar per serving using a linear regression.
+
+```{r, echo = FALSE}
+sugar_rating <- lm(formula= Rating~ Sugar, data= cereal)
+summary(sugar_rating)
+sugar_rating %>%
+augment(data = cereal) %>%
+  ggplot(mapping = aes(x = Sugar , y = .fitted)) +
+    geom_point(mapping = aes(y = Rating,  color= Manufacturer_Name), alpha = 0.5) +
+    geom_line(color = "purple") + xlab("Sugar") + ylab("Ratings") 
+```
+
+We can see that the higher the amount of Sugar per serving, the lower the rating. This might be because ratings are mainly done by adults which are more likey to prefer low sugar cereal since they are helathier. This model explains 57% of the variance in the data.
+
+Since it seems that the healthier the cereal the better its rating we also explored the relation between rating and fibre.
+
+```{r, echo=FALSE}
+fibre_rating <- lm(formula= Rating~ Fibre, data= cereal)
+summary(fibre_rating)
+fibre_rating %>%
+augment(data = cereal) %>%
+  ggplot(mapping = aes(x = Fibre , y = .fitted)) +
+    geom_point(mapping = aes(y = Rating,  color= Manufacturer_Name), alpha = 0.5) +
+    geom_line(color = "purple") + xlab("Fibre") + ylab("Ratings") 
+```
+
+As expected, the higer the amount of fibre the better the rating; however the R squared for this model is only 34%, showing that Sugar might be a better predictor for Rating.
+
+## **Conclusion:**
+
+As we saw above a big part of the calories come from the amount of sugar, carbohydrates and fat. People also rate a cereal based on how low the sugar is and how much fiber it has. Ready-to-eat breakfast cereal can make for a convenient, healthy and balanced breakfast, especially if it's made with whole grains, is low in sugar and is served with fresh fruit. Pay attention to portion sizes, and always read the ingredients list. Cereal is healthy only if you choose wisely. 
