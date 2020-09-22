@@ -15,3 +15,9 @@ We will look at the rating and compare with the sugar and the fiber to see if th
 ### **The Data:**
 For this project we used the Kaggle cereal data set ^[Crawford, Chris. “80 Cereals.” Kaggle, 24 Oct. 2017, www.kaggle.com/crawford/80-cereals.].
 This data set contains cereal name, manufacturer name, rating and nutritional facts such as sugar per serving, carbohidrates per serving, etc.
+
+### **Conclusion:**
+We disxovered that big part of the calories come from the amount of sugar, carbohydrates and fat. 
+People also rate a cereal based on how low the sugar is and how much fiber it has. 
+Ready-to-eat breakfast cereal can make for a convenient, healthy and balanced breakfast, especially if it's made with whole grains, is low in sugar and is served with fresh fruit. Pay attention to portion sizes, and always read the ingredients list. Cereal is healthy only if you choose wisely. 
+
