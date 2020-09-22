@@ -21,3 +21,4 @@ We disxovered that big part of the calories come from the amount of sugar, carbo
 People also rate a cereal based on how low the sugar is and how much fiber it has. 
 Ready-to-eat breakfast cereal can make for a convenient, healthy and balanced breakfast, especially if it's made with whole grains, is low in sugar and is served with fresh fruit. Pay attention to portion sizes, and always read the ingredients list. Cereal is healthy only if you choose wisely. 
 
+<img src="Final_Project_bootcamp-master1/Images/cerealpic.jpg" width="300">
