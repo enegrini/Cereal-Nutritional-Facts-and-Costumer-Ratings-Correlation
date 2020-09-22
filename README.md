@@ -1,5 +1,5 @@
 # **Relation between cereal nutritional fact and costumer rating**
-The code for this study is written in R and can be found in the file called Code.rmd
+The code for this study is written in R and can be found in the code folder.
 ### **Introduction:** 
 Sometimes eating a perfectly balanced breakfast in the morning is hard and thus we usually turn to eating cereal.
 Believe it or not, healthy cereal does exist. In fact, it was invented as a low-fat health product to deliver more fiber to our bodies.
