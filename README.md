@@ -1,5 +1,5 @@
 # **Relation between cereal nutritional fact and costumer rating**
-
+The code for this study is written in R and can be found in the file called Code.rmd
 ### **Introduction:** 
 Sometimes eating a perfectly balanced breakfast in the morning is hard and thus we usually turn to eating cereal.
 Believe it or not, healthy cereal does exist. In fact, it was invented as a low-fat health product to deliver more fiber to our bodies.
@@ -21,4 +21,4 @@ We disxovered that big part of the calories come from the amount of sugar, carbo
 People also rate a cereal based on how low the sugar is and how much fiber it has. 
 Ready-to-eat breakfast cereal can make for a convenient, healthy and balanced breakfast, especially if it's made with whole grains, is low in sugar and is served with fresh fruit. Pay attention to portion sizes, and always read the ingredients list. Cereal is healthy only if you choose wisely. 
 
-<img src="Final_Project_bootcamp-master1/Images/cerealpic.jpg" width="300">
+<img src="images/cerealpic.jpg" width="300">
